@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NEXORA AI — One Intelligence. Endless Possibilities.</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- ============ AUTH ============ -->
+  <div id="auth" class="auth hidden">
+    <div class="auth-card">
+      <div class="brand big"><span class="logo"></span><span class="brand-name">NEXORA <b>AI</b></span></div>
+      <p class="tagline">One Intelligence. Endless Possibilities.</p>
+      <div class="tabs" id="authTabs"><button data-tab="login" class="active">Sign in</button><button data-tab="register">Create account</button></div>
+      <form id="loginForm" class="form" autocomplete="on">
+        <label>Email<input type="email" id="loginEmail" required autocomplete="username"></label>
+        <label>Password<input type="password" id="loginPass" required autocomplete="current-password"></label>
+        <button class="btn primary" type="submit">Sign in</button>
+      </form>
+      <form id="registerForm" class="form hidden" autocomplete="on">
+        <label>Name<input type="text" id="regName" required maxlength="100" autocomplete="name"></label>
+        <label>Email<input type="email" id="regEmail" required autocomplete="username"></label>
+        <label>Password (min 8 characters)<input type="password" id="regPass" required minlength="8" autocomplete="new-password"></label>
+        <button class="btn primary" type="submit">Create account</button>
+      </form>
+      <div id="authError" class="error-box hidden"></div>
+    </div>
+  </div>
+
+  <!-- ============ APP ============ -->
+  <div id="app" class="app hidden">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand"><span class="logo"></span><span class="brand-name">NEXORA <b>AI</b></span></div>
+      <button class="btn primary wide" id="newChat">＋ New chat</button>
+      <input class="search" id="convSearch" type="search" placeholder="Search conversations…">
+      <div class="conv-list" id="convList"></div>
+      <div class="side-foot">
+        <button class="profile-btn" id="openSettings"><span class="avatar" id="avatar">?</span><span class="pname" id="pname"></span><span class="gear">⚙</span></button>
+      </div>
+    </aside>
+    <div class="scrim hidden" id="scrim"></div>
+
+    <main class="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" title="Menu">☰</button>
+        <div class="modes" id="modes"></div>
+        <div class="top-actions">
+          <button class="icon-btn" id="voiceChatBtn" title="Voice conversation">🎙 Voice chat</button>
+          <button class="icon-btn" id="themeBtn" title="Toggle theme">🌓</button>
+        </div>
+      </header>
+
+      <section class="chat" id="chat">
+        <div class="welcome" id="welcome">
+          <div class="hero-logo"></div>
+          <h1>How can I help today?</h1>
+          <p class="muted">NEXORA AI runs on your own models. Pick a mode above, or leave it on <b>Smart</b>.</p>
+          <div class="feature-cards">
+            <button class="fcard" data-mode="SMART"><b>✦ Smart Mode</b><span>Auto-selects the right mode, tools and model for each question.</span></button>
+            <button class="fcard" data-mode="DEEP_RESEARCH"><b>🔬 Deep Research</b><span>Plans searches, reads several sources, writes a cited report.</span></button>
+            <button class="fcard" data-mode="PROJECT_BUILDER"><b>🧱 Project Builder</b><span>Describe an app, get the full code, setup steps and a ZIP.</span></button>
+          </div>
+          <div class="suggestions" id="suggestions"></div>
+        </div>
+        <div class="messages" id="messages"></div>
+      </section>
+
+      <footer class="composer-wrap">
+        <div class="doc-actions hidden" id="docActions"></div>
+        <div class="attachments" id="attachments"></div>
+        <div class="composer">
+          <input type="file" id="fileInput" class="hidden" accept=".pdf,.docx,.txt,.md,.png,.jpg,.jpeg,.webp,.gif" multiple>
+          <button class="icon-btn" id="attachBtn" title="Attach PDF, DOCX, TXT or image">📎</button>
+          <textarea id="input" rows="1" placeholder="Message NEXORA AI…  (Enter to send, Shift+Enter for a new line)"></textarea>
+          <button class="icon-btn" id="micBtn" title="Voice input">🎤</button>
+          <button class="send-btn" id="sendBtn" title="Send">➤</button>
+        </div>
+        <div class="disclaimer">AI-generated and may be inaccurate. Check important information before relying on it.</div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ============ SETTINGS ============ -->
+  <div id="settings" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head"><h2>Settings</h2><button class="icon-btn" id="closeSettings">✕</button></div>
+      <div class="tabs" id="setTabs">
+        <button data-tab="profile" class="active">Profile</button><button data-tab="prefs">Preferences</button>
+        <button data-tab="providers">AI Providers</button><button data-tab="memory">Memory</button><button data-tab="data">Data</button>
+      </div>
+      <div class="modal-body">
+        <div class="pane" data-pane="profile">
+          <label>Display name<input id="setName" maxlength="100"></label>
+          <button class="btn primary" id="saveName">Save name</button>
+          <hr>
+          <label>Current password<input type="password" id="pwCur" autocomplete="current-password"></label>
+          <label>New password (min 8)<input type="password" id="pwNew" autocomplete="new-password"></label>
+          <button class="btn" id="savePw">Change password</button>
+          <hr><button class="btn danger" id="logoutBtn">Sign out</button>
+        </div>
+        <div class="pane hidden" data-pane="prefs">
+          <label>Theme<select id="setTheme"><option value="dark">Dark</option><option value="light">Light</option><option value="system">System</option></select></label>
+          <label>Default provider<select id="setProvider"></select></label>
+          <label>Default model (optional – overrides the provider's default)<input id="setModel" list="modelList" placeholder="e.g. llama3.2"></label>
+          <datalist id="modelList"></datalist>
+          <label>Creativity (temperature): <span id="tempVal">0.7</span><input type="range" id="setTemp" min="0" max="2" step="0.1" value="0.7"></label>
+          <label>Custom instructions<textarea id="setCustom" rows="4" maxlength="2000" placeholder="e.g. Explain things simply. I use Java and Windows."></textarea></label>
+          <label class="check"><input type="checkbox" id="setMemory"> Use memory in conversations</label>
+          <button class="btn primary" id="savePrefs">Save preferences</button>
+        </div>
+        <div class="pane hidden" data-pane="providers">
+          <p class="muted">Add Ollama or any OpenAI-compatible endpoint (Groq, OpenRouter, LM Studio…). API keys are stored encrypted and never shown again.</p>
+          <div id="providerList"></div>
+          <h3 id="provFormTitle">Add provider</h3>
+          <label>Preset<select id="provPreset"><option value="">Custom</option><option value="ollama">Ollama (local)</option><option value="lmstudio">LM Studio (local)</option><option value="groq">Groq (free tier)</option><option value="openrouter">OpenRouter</option></select></label>
+          <label>Name<input id="provName" maxlength="100"></label>
+          <label>Type<select id="provType"><option value="OLLAMA">Ollama</option><option value="OPENAI_COMPATIBLE">OpenAI-compatible</option></select></label>
+          <label>Base URL<input id="provUrl" placeholder="http://localhost:11434"></label>
+          <label>API key (leave empty to keep the current one)<input type="password" id="provKey" autocomplete="off"></label>
+          <label>Default model<input id="provModel"></label>
+          <label>Vision model (for images, optional)<input id="provVision" placeholder="e.g. llava or llama3.2-vision"></label>
+          <label>Code model (for Programming mode, optional)<input id="provCode" placeholder="e.g. qwen2.5-coder"></label>
+          <label class="check"><input type="checkbox" id="provPreferred"> Use as default provider</label>
+          <div class="row"><button class="btn primary" id="saveProv">Save provider</button><button class="btn" id="resetProv">Clear form</button></div>
+        </div>
+        <div class="pane hidden" data-pane="memory">
+          <p class="muted">Facts NEXORA remembers about you. You can also say “Remember that …” in chat.</p>
+          <div class="row"><input id="memInput" maxlength="1000" placeholder="Add a memory…"><button class="btn primary" id="addMem">Add</button></div>
+          <div id="memList"></div>
+          <button class="btn danger" id="clearMem">Clear all memories</button>
+        </div>
+        <div class="pane hidden" data-pane="data">
+          <p class="muted">Delete every conversation and message in your account. Uploaded files stay in your file list but are unlinked.</p>
+          <button class="btn danger" id="clearAll">Delete all chat history</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>

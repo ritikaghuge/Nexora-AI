@@ -1,0 +1,35 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: nexora-ai
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/nexora_ai?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 16MB
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    session:
+      timeout: 8h
+      cookie:
+        http-only: true
+        same-site: lax
+nexora:
+  encryption-key: ${APP_ENCRYPTION_KEY:}
+  upload-dir: ${UPLOAD_DIR:./uploads}
+  ollama:
+    base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+    default-model: ${OLLAMA_MODEL:llama3.2}
+  search:
+    provider: ${SEARCH_PROVIDER:wikipedia}
+    searxng-url: ${SEARXNG_URL:http://localhost:8888}
+    brave-api-key: ${BRAVE_API_KEY:}

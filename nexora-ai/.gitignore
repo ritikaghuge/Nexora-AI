@@ -1,0 +1,7 @@
+target/
+uploads/
+.env
+.nexora-secret
+.idea/
+.vscode/
+*.iml
